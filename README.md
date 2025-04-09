@@ -9,7 +9,7 @@ A simple question and answer web application like Quora, built using Django, whe
 ```bash
 python manage.py makemigrations
 python manage.py migrate
-
+```
 
 ## How to Use
 
