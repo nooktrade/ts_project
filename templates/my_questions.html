@@ -1,0 +1,36 @@
+{% extends 'index.html' %}
+{% block content %}
+
+
+<h3>Your questions </h3>
+
+
+
+{% for question in questions %}
+  <div class="card my-3">
+    <div class="card-body">
+      <h5>{{ question.title }}</h5>
+      <p>{{ question.description }}</p>
+      <p><small>Asked by: {{ question.asked_by.username }}</small></p>
+
+      {% for answer in question.answers.all %}
+        <div class="mt-3 p-3 border rounded bg-light">
+          <p>{{ answer.content }}</p>
+          <p>
+            <small>
+              Answered by: {{ answer.answered_by.username }} |
+              Time: {{ answer.created_at|date:"d M Y H:i" }} |
+              Likes: {{ answer.total_likes }}
+              <span id="like-count-{{ answer.id }}"><strong>{{ answer.likes.count }}</strong></span> Likes
+            </small>
+
+          </p>
+         
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+{% empty %}
+<p>No questions yet</p>
+{% endfor %}
+{% endblock %}

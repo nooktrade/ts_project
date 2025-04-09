@@ -1,0 +1,47 @@
+{% extends 'index.html' %}
+{% block content %}
+
+<h3>You can answer these questions</h3>
+
+{% for question in questions %}
+  <div class="card my-3">
+    <div class="card-body">
+      <h5>{{ question.title }}</h5>
+      <p>{{ question.description }}</p>
+      <p><small>Asked by: {{ question.asked_by.username }}</small></p>
+
+    
+
+      <button class="btn btn-outline-primary mt-3" data-bs-toggle="modal" data-bs-target="#answerModal{{ question.id }}">
+        Answer Me
+      </button>
+
+
+      <div class="modal fade" id="answerModal{{ question.id }}" tabindex="-1" aria-labelledby="answerModalLabel{{ question.id }}" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <form method="POST" action="{% url 'submit_answer' question.id %}">
+              {% csrf_token %}
+              <div class="modal-header">
+                <h5 class="modal-title" id="answerModalLabel{{ question.id }}">Answer: {{ question.title }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <textarea name="content" class="form-control" rows="4" placeholder="Write your answer here..." required></textarea>
+              </div>
+              <div class="modal-footer">
+                <button type="submit" class="btn btn-success">Submit Answer</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+{% empty %}
+  <p>No questions yet.</p>
+{% endfor %}
+
+{% endblock %}

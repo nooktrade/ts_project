@@ -1,0 +1,23 @@
+{% extends 'index.html' %}
+{% block content %}
+<div class="container mt-5">
+  <div class="card shadow-sm p-4">
+    <h3 class="mb-4">Ask a New Question</h3>
+    <form method="POST">
+      {% csrf_token %}
+
+      <div class="mb-3">
+        <label for="id_title" class="form-label">Title</label>
+        <input type="text" class="form-control" id="id_title" name="title" placeholder="e.g. What is Django ORM?" required>
+      </div>
+
+      <div class="mb-3">
+        <label for="id_description" class="form-label">Description (Optional)</label>
+        <textarea class="form-control" id="id_description" name="description" rows="5" placeholder="Add more context or details..."></textarea>
+      </div>
+
+      <button type="submit" class="btn btn-primary">Post Question</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

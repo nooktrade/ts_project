@@ -1,0 +1,70 @@
+{% extends 'index.html' %}
+{% block content %}
+<style>
+    .login-container {
+        max-width: 400px;
+        margin: 60px auto;
+        background-color: white;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 0 15px rgba(0,0,0,0.1);
+    }
+
+    .login-container h2 {
+        text-align: center;
+        margin-bottom: 20px;
+        color: #333;
+    }
+
+    .login-container .form-control {
+        border-radius: 8px;
+    }
+
+    .login-container button {
+        border-radius: 8px;
+        background-color: #02f5b8;
+        color: white;
+        transition: background-color 0.3s ease;
+    }
+
+    .login-container button:hover {
+        background-color: #1b3831;
+        color: white;
+    }
+
+    .register-link {
+        text-align: center;
+        margin-top: 15px;
+    }
+</style>
+
+{% if messages %}
+  <script>
+    {% for message in messages %}
+      alert("{{ message|escapejs }}");
+    {% endfor %}
+  </script>
+{% endif %}
+
+<div class="login-container">
+    <h2>Login</h2>
+    <form method="POST">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="username" class="form-label">Username:</label>
+            <input type="text" name="username" id="username" class="form-control" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="password" class="form-label">Password:</label>
+            <input type="password" name="password" id="password" class="form-control" required>
+        </div>
+
+        <button type="submit" class="btn w-100">Login</button>
+    </form>
+
+    <div class="register-link">
+        Don't have an account? <a href="/register">Register here</a>
+    </div>
+</div>
+{% endblock %}

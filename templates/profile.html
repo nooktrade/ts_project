@@ -1,0 +1,45 @@
+{% extends 'index.html' %}
+{% block content %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Your Profile</title>
+    <style>
+
+        .profile-container {
+            background-color: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.2);
+            width: 350px;
+            text-align: center;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #fa2340;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #452226;
+        }
+    </style>
+</head>
+<body>
+    <div class="profile-container">
+        <h2>Welcome, {{ request.user }}</h2>
+        <p>Email: {{ user.email }}</p>
+        
+        <form method="post" action="{% url 'logout_user' %}">
+            {% csrf_token %}
+            <button type="submit">Logout</button>
+        </form>
+
+    </div>
+</body>
+</html>
+{% endblock %}

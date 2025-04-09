@@ -1,0 +1,94 @@
+{% extends 'index.html' %}
+{% block content %}
+
+<h5 class="my-4">Hello <strong>{{ request.user }}</strong></h5>
+<h4 class="mb-4">Enjoy "ASK ME" feed</h4>
+
+{% for question in questions %}
+  <div class="card shadow-sm mb-4 border-20">
+    <div class="card-header bg-light text-dark">
+      <h5 class="mb-0" style="color: #FF5733;"> {{ question.title }}</h5>
+    </div>
+    <div class="card-body">
+      <p style="color:rgb(129, 6, 57);">{{ question.description }}</p>
+      <p><small>📝 Asked by: <strong>{{ question.asked_by.username }}</strong></small></p>
+
+      {% for answer in question.answers.all %}
+        <div class="mt-4 p-3 border rounded bg-light shadow-sm" id="answer-{{ answer.id }}">
+          <p class="mb-2 answer-content" style="max-height: 100px; overflow: hidden;" id="content-{{ answer.id }}">
+            {{ answer.content }}
+          </p>
+          {% if answer.content|length > 300 %}
+          <a href="javascript:void(0);" class="text-primary more-toggle" data-id="{{ answer.id }}">More</a>
+          {% endif %}
+          <p class="mb-2 mt-2">
+            <small>
+              ✅ Answered by: <strong>{{ answer.answered_by.username }}</strong> |
+              🕒 {{ answer.created_at|date:"d M Y, H:i" }}
+            </small>
+          </p>
+
+          <div class="d-flex align-items-center">
+            <button class="btn btn-sm btn-outline-danger me-2 like-btn" data-id="{{ answer.id }}">
+              {% if request.user in answer.likes.all %}
+              ❤️ Unlike
+              {% else %}
+              🤍 Like
+              {% endif %}
+            </button>
+            <span id="like-count-{{ answer.id }}"><strong>{{ answer.likes.count }}</strong></span> Likes
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+{% empty %}
+  <div class="alert alert-info mt-4">No answered questions yet.</div>
+{% endfor %}
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const buttons = document.querySelectorAll('.like-btn');
+    const toggles = document.querySelectorAll('.more-toggle');
+
+    buttons.forEach(button => {
+      button.addEventListener('click', function () {
+        const answerId = this.dataset.id;
+        const url = `/like_answer/${answerId}/`;
+
+        fetch(url, {
+          method: 'GET',
+          headers: {
+            'X-Requested-With': 'XMLHttpRequest',
+          },
+        })
+        .then(response => response.json())
+        .then(data => {
+          const likeCountSpan = document.getElementById(`like-count-${answerId}`);
+          likeCountSpan.textContent = data.total_likes;
+
+          this.innerHTML = data.liked ? '❤️ Unlike' : '🤍 Like';
+        })
+        .catch(error => console.error('Error:', error));
+      });
+    });
+
+    toggles.forEach(toggle => {
+      toggle.addEventListener('click', function () {
+        const id = this.dataset.id;
+        const content = document.getElementById(`content-${id}`);
+        if (content.style.maxHeight === '100px') {
+          content.style.maxHeight = 'none';
+          content.style.overflow = 'visible';
+          this.innerText = 'Less';
+        } else {
+          content.style.maxHeight = '100px';
+          content.style.overflow = 'hidden';
+          this.innerText = 'More';
+        }
+      });
+    });
+  });
+</script>
+
+{% endblock %}
